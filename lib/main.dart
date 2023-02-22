@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,14 +16,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'confirmationpage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-
 import 'dragScreen.dart';
 import 'loginPage.dart';
 import 'package:ink_widget/ink_widget.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:get/get.dart';
 
 // @pragma('vm:entry-point')
 // Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -39,8 +36,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 //   //   eventTriggered();
 //   // });
 // }
-
-
+ late BuildContext appContext;
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
@@ -49,7 +45,9 @@ void main() async {
     const MaterialApp(
       debugShowCheckedModeBanner: false,
         title: 'Ola', // used by the OS task switcher
-        home: SafeArea(child: MyApp())
+        home: SafeArea(child: MyApp()),
+
+
     ),
   );
 }
@@ -76,6 +74,11 @@ class MyApp extends StatefulWidget{
   @override
   _MyAppState createState() => _MyAppState();
 
+  @override
+  Widget build(BuildContext context) {
+    appContext = context;
+    return Container();
+  }
 }
 bool splashTime=false;
 bool splashTimer() {
@@ -122,7 +125,7 @@ class _MyAppState extends State<MyApp>{
 
     super.initState();
 
-
+    initDynamicLinks();
     Timer(const Duration(seconds: 2),(){
       setState(() {
         splashTime=splashTimer();
@@ -131,6 +134,7 @@ class _MyAppState extends State<MyApp>{
       if(splashTime==true){
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => FirstPage()));
+
       }
     });
     startTimer();
@@ -139,6 +143,29 @@ class _MyAppState extends State<MyApp>{
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       listenForMsg();
     });
+  }
+  void initDynamicLinks() async{
+    print("initDynaic links called!!!");
+    final PendingDynamicLinkData? initialLink =
+    await FirebaseDynamicLinks.instance.getInitialLink();
+    if (initialLink != null) {
+      final Uri deepLink = initialLink.link;
+      print('Deeplinks uri:${deepLink.path}');
+      if (deepLink.path == '/scrollpage') {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => SearchPage()));
+      } else if (deepLink.path == '/listingpage') {
+
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => SearchHome()));
+      }
+      else{
+        if (kDebugMode) {
+          print("Page not available!!!");
+        }
+
+      }
+    }
   }
   listenForMsg(){
     events.receiveBroadcastStream().listen((data) {
@@ -155,16 +182,20 @@ class _MyAppState extends State<MyApp>{
     }, onError: (error) {
       print("Error: $error");
     });
+
   }
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'myolaapp',
       home:SplashScreen(),
     );
   }
+
+
 }
 
 
@@ -992,5 +1023,6 @@ Widget _buildPopupDialog() {
 
 
        );
+
   }
 

@@ -1,10 +1,10 @@
 package com.example.myolaapp
-
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import com.example.fluttersdkplugin.FluttersdkpluginPlugin
 import com.example.fluttersdkplugin.MessageNotifier
 import io.flutter.Log
 import io.flutter.embedding.android.FlutterActivity
@@ -16,12 +16,11 @@ class MainActivity: FlutterActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // ...
-
+        FluttersdkpluginPlugin().initResdk(this)
         eChannel.setStreamHandler(MessageNotifier(""))
     }
 
-    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine){
         super.configureFlutterEngine(flutterEngine)
         val filter = IntentFilter("com.example.myapp.MY_EVENT")
         registerReceiver(receiver, filter)

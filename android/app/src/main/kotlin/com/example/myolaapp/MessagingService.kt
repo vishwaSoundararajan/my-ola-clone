@@ -10,7 +10,6 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.dart.DartExecutor.DartEntrypoint
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
-import io.mob.resu.reandroidsdk.ReAndroidSDK
 import kotlin.random.Random
 
 
