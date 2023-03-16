@@ -46,7 +46,7 @@ dependencies:
   firebase_core: ^2.4.0
   firebase_messaging: ^14.1.4
   flutter_local_notifications: ^12.0.4
-  fluttersdkplugin: ^0.0.11
+  fluttersdkplugin: ^1.0.7
   fluttertoast: ^8.1.2
   logger: ^1.1.0
   geolocator: ^9.0.2

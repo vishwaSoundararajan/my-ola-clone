@@ -87,9 +87,21 @@ class _SdkMethodTesting extends State<SdkMethodTesting> {
       cid=controller1.text;
 
     });}
+  unreadNotification() {
+    setCidState();
+    _olasdkPlugin.unReadNotification(cid);
+  }
   readnotification(){
     setCidState();
     _olasdkPlugin.readNotification(cid);
+  }
+  customevent(){
+    var data = {
+      "name": "payment",
+      "data": {"id": "2d43", "price": "477"}
+    };
+    String eventData = jsonEncode(data);
+    _olasdkPlugin.customevent(eventData,"Custom Event");
   }
   appconversionTracking(){
     _olasdkPlugin.appConversionTracking();
@@ -116,57 +128,172 @@ return MaterialApp(
         child:
           Container(
             child:Column(
-              children:[
-                SizedBox(
-                  height: 50,
+              children: [
+                Center(
+                  child: Text('Running on: $_platformVersion\n'),
                 ),
-                ElevatedButton( onPressed: (){
-                  passLocation();
-                }, child: Text("Push Location"),),
-                ElevatedButton( onPressed: (){//
-                  newNotification();
-                }, child: Text("Add New Notification"),),
-                ElevatedButton( onPressed: (){//
-                  formdataCapture();
-                }, child: Text("form Data Capture"),),
-                ElevatedButton( onPressed: (){//
-                  ondeviceRegister();
-                }, child: Text("On Device User Register"),),
-                ElevatedButton( onPressed: (){
-                  ontrackEvent();
-                }, child: Text("On Track Event"),),
+                // Center(
+                //   child: Text('Data Passed from NativeCode: $data!'),
+                // ),
+                SizedBox(
+                  width:double.infinity,
+                  child:  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey // Background color
+                    ),
+                    onPressed: () { //
+                    ondeviceRegister();
+                    }, child: Text("On Device User Register"),),
+                ),
+                SizedBox(
+                  width:double.infinity,
+                  child:ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey // Background color
+                    ),
+                    onPressed: () {
+                    updatepushToken();
+                  }, child: Text("update Push Token"),),
+                ),
+                SizedBox(
+                  width:double.infinity,
+                  child:  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey // Background color
+                    ),
+                    onPressed: () {
+                    passLocation();
+                  }, child: Text("Update Location"),),
+                ),
+                SizedBox(
+                  width:double.infinity,
+                  child:ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                       backgroundColor: Colors.grey // Background color
+                    ),
+                    onPressed: () {
+                      newNotification();
+                    },child: Text("Add New Notification"),),
+                ),
                 TextField(
                   controller: controller1,
-                  onTap: (){
-                    setState(() {
-                    });
-                  },
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       labelText: "Enter ID",
-
-                      border:OutlineInputBorder(
+                      border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20))),),
-                ElevatedButton( onPressed: (){
-                  deleteNotificationByCampaignid();
-                }, child: Text("delete Notification By Campaignid"),),
-                ElevatedButton( onPressed: (){
-                  readnotification();
-                }, child: Text("read Notification"),),
-                ElevatedButton( onPressed: (){
-                  appconversionTracking();
-                }, child: Text("app Conversion Tracking"),),
-                ElevatedButton( onPressed: (){
-                  readnotificationCount();
-                }, child: Text("read Notification Count"),),
-                ElevatedButton( onPressed: (){
-                  updatepushToken();
-                }, child: Text("update Push Token"),),
-                ElevatedButton( onPressed: (){
-                  getdeepLinkData();
-                }, child: Text("Get deepLinkData"),),
-              ]
-            )
+                SizedBox(
+                  width:double.infinity,
+                  child:ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey // Background color
+                    ),
+                    onPressed: () {
+                    readnotification();
+                  }, child: Text("Read Notification By Id"),),
+                ),
+                SizedBox(
+                  width:double.infinity,
+                  child:    ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey // Background color
+                    ),
+                    onPressed: () {
+                    _olasdkPlugin.getNotification();
+                  }, child: Text("Get Notifications"),),
+                ),
+                SizedBox(
+                  width:double.infinity,
+                  child:    ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey // Background color
+                    ),
+                    onPressed: () {
+                    unreadNotification();
+                  }, child: Text("Un Read Notification"),),
+                ),
+                SizedBox(
+                  width:double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey // Background color
+                    ),
+                    onPressed: () {
+                    readnotificationCount();
+                  }, child: const Text("Read Notification Count"),),
+                ),
+                SizedBox(
+                  width:double.infinity,
+                  child:  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey // Background color
+                    ),
+                    onPressed: () {
+                    deleteNotificationByCampaignid();
+                    setState(() {
+                      controller1.clear();
+                    });
+                  }, child: Text("Delete Notification By CampaignId"),),
+                ),
+
+                SizedBox(
+                  width:double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey // Background color
+                    ),
+                    onPressed: () {
+                    formdataCapture();
+                  }, child: Text("form Data Capture"),),
+                ),
+                SizedBox(
+                  width:double.infinity,
+                  child:ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey // Background color
+                    ),
+                    onPressed: () {
+                    ontrackEvent();
+                  }, child: Text("On Track Event"),),
+                ),
+                SizedBox(
+                  width:double.infinity,
+                  child:ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey // Background color
+                    ),
+                    onPressed: () {
+                    appconversionTracking();
+                  }, child: Text("app Conversion Tracking"),),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey // Background color
+                    ),
+                    onPressed: () {
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size.fromHeight(40),);
+                    getdeepLinkData();
+                  }, child: Text("Get deepLinkData"),),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey // Background color
+                    ),
+                    onPressed: () {
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size.fromHeight(40),);
+                    customevent();
+                  }, child: Text("CustomEvent"),),
+                ),
+
+
+              ],
+            ),
           )
       ),
     ) ,

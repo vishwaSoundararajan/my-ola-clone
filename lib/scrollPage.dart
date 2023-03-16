@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myolaapp/bottomSheet.dart';
@@ -514,7 +515,13 @@ void bottom(){
                                                 height: 10,
                                                 width:35,
                                               ),
-                                              Column(
+                                              GestureDetector(
+                                                onTap: (){
+                                                  var content="visited Ola Money";
+                                                  _olasdkPlugin.onTrackEvent(content);
+
+                                                },
+                                                child:Column(
                                                 children: [
                                                   Row(
                                                     children: [
@@ -531,7 +538,7 @@ void bottom(){
                                                   Row(
                                                     children: [Text("Money",style: TextStyle(fontSize: 14),)],
                                                   )],
-                                              ),
+                                              ),),
                                               const SizedBox(
                                                 height: 10,
                                                 width:35,
@@ -723,14 +730,18 @@ void bottom(){
                                 ),
                                 GestureDetector(
                                   onTap: (){
-                                    var content="On Track Event called!!!";
-                                    _olasdkPlugin.onTrackEvent(content);
-                                    _olaURLBrowser();
+                                      var data = {
+                                        "name": "Advertisement",
+                                        "data": {"id": "2d43", "Color": "Black","category":"Scooter"}
+                                      };
+                                      String eventData = jsonEncode(data);
+                                      _olasdkPlugin.customevent(eventData,"Custom Event");
+
                                     },
 
                                 child:
                                   TextButton(onPressed:(){
-                                    var content="On Track Event called!!!";
+                                    var content="Clicked Ola Scotter Advertisement";
                                     _olasdkPlugin.onTrackEvent(content);
                                   },
                                     style: TextButton.styleFrom(padding: const EdgeInsets.fromLTRB(20,160,20,0),backgroundColor: Colors.transparent), child: Row(
@@ -772,9 +783,16 @@ void bottom(){
                                     'assets/pic2.jpeg',
                                     fit: BoxFit.fitWidth,
                                   ),
-                                  TextButton(onPressed:(){
-                                    var content="On Track Event called!!!";
-                                    _olasdkPlugin.onTrackEvent(content);
+                                  TextButton(
+                                    onPressed:(){
+                                        var data = {
+                                          "name": "Offers",
+                                          "data": {"id": "2d43", "Color": "Multi Colours","category":"Scooter"}
+                                        };
+                                        String eventData = jsonEncode(data);
+                                        _olasdkPlugin.customevent(eventData,"Custom Event");
+                                    // var content="Intreseted in ola Scotters";
+                                    // _olasdkPlugin.onTrackEvent(content);
                                   Navigator.of(context).push(
                                             MaterialPageRoute(builder: (context)=>const TestRide())
                                          );
@@ -815,7 +833,7 @@ void bottom(){
                                   ),
                                   TextButton(onPressed: (){
                                     _olaURLBrowser();
-                                    var content="On Track Event called!!!";
+                                    var content="Clicked ola Scotters";
                                     _olasdkPlugin.onTrackEvent(content);
                                     },
                                     style: TextButton.styleFrom(padding: const EdgeInsets.fromLTRB(20,120,20,0),backgroundColor: Colors.transparent), child: Row(

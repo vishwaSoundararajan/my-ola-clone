@@ -119,11 +119,11 @@ class _MyPhoneState extends State<MyPhone> {
 
                 Container(
                   margin: EdgeInsets.fromLTRB(0,50,0,0),
-                  child: IntlPhoneField(flagsButtonMargin: EdgeInsets.fromLTRB(0,17,0,0),
+                  child: IntlPhoneField(flagsButtonMargin: EdgeInsets.fromLTRB(0,3,0,0),
                     controller: phone_controller,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       enabled: false,
-                      labelText: 'Phone Number',
+                      labelText: 'Phone Number',contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       border:UnderlineInputBorder(borderSide:BorderSide(color: Colors.blue) ) ,
                     ),
                     initialCountryCode: 'IN',

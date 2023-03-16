@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttersdkplugin/fluttersdkplugin.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:myolaapp/listingpage.dart';
 import 'package:myolaapp/phonefield.dart';
@@ -10,22 +11,22 @@ import 'package:myolaapp/scrollPage.dart';
 import 'package:myolaapp/sdkMethodsTesting.dart';
 import 'package:myolaapp/splash_screen.dart';
 import 'package:myolaapp/testRidepage.dart';
-import 'package:myolaapp/userpage.dart';
+import 'package:myolaapp/phonefield.dart';
 import 'package:myolaapp/welcomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'confirmationpage.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dragScreen.dart';
 import 'loginPage.dart';
 import 'package:ink_widget/ink_widget.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:get/get.dart';
 
 // @pragma('vm:entry-point')
-// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 //   // If you're going to use other Firebase services in the background, such as Firestore,
 //   // make sure you call `initializeApp` before using other Firebase services.
 //   await Firebase.initializeApp();
@@ -38,9 +39,9 @@ import 'package:get/get.dart';
 // }
  late BuildContext appContext;
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
- // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+ //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(
     const MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -84,18 +85,20 @@ bool splashTime=false;
 bool splashTimer() {
   return true;
 }
+var logger = Logger();
 class _MyAppState extends State<MyApp>{
-  var logger = Logger();
+
   late Timer _timer;
   static const events = EventChannel('example.com/channell');
   int notificationCount=0;
   @override
   void initState() {
-    // Firebase.initializeApp();
+    Firebase.initializeApp();
     // FirebaseMessaging.instance.getToken().then((newToken) {
     //   print("FCM token: ");
     //   print(newToken);
     //   _olasdkPlugin.updatePushToken(newToken!);
+   // val mytoken="cZW-_wFgRmmkc6F-dzfwlV:APA91bE2IqDUxmZcAyPhAzwoTCpYXuQbENcBqLqn3TOv_pof_Zmow7qtwZE64Avq_8KOWr5u18fVplrX-fAYfJmRjeIkCeWoYectt-kHL59T46h-8S723Lsqdk5DM9RzrOfyKZ-04AA3";
         // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         //   print('Got a message whilst in the foreground!');
         //   print('Message data: ${message.notification?.body} ');
@@ -125,7 +128,32 @@ class _MyAppState extends State<MyApp>{
 
     super.initState();
 
-    initDynamicLinks();
+    // //deeplink
+    // // Set up a method channel to handle deep links
+    // const deepLinkChannel = MethodChannel('myapp/deep_link');
+    // deepLinkChannel.setMethodCallHandler((call) async {
+    //   if (call.method == 'handleDeepLink') {
+    //     final deepLink = call.arguments['link'];
+    //
+    //     Uri uri = Uri.parse(deepLink);
+    //     String? id = uri.queryParameters['id'];
+    //     // Navigate to the details screen with the given ID
+    //     if(id=="phonefield")
+    //       {
+    //         Navigator.push(context, MaterialPageRoute(builder: (context) =>MyPhone()));
+    //       }
+    //     else {
+    //       logger.i("Page not available");
+    //     }
+    //
+    //     // Navigate to the details screen with the given ID
+    //     // (parse the ID from the deep link URL)
+    //   }
+    // });
+    //
+    // //deeplink
+
+
     Timer(const Duration(seconds: 2),(){
       setState(() {
         splashTime=splashTimer();
@@ -144,29 +172,7 @@ class _MyAppState extends State<MyApp>{
       listenForMsg();
     });
   }
-  void initDynamicLinks() async{
-    print("initDynaic links called!!!");
-    final PendingDynamicLinkData? initialLink =
-    await FirebaseDynamicLinks.instance.getInitialLink();
-    if (initialLink != null) {
-      final Uri deepLink = initialLink.link;
-      print('Deeplinks uri:${deepLink.path}');
-      if (deepLink.path == '/scrollpage') {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SearchPage()));
-      } else if (deepLink.path == '/listingpage') {
 
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SearchHome()));
-      }
-      else{
-        if (kDebugMode) {
-          print("Page not available!!!");
-        }
-
-      }
-    }
-  }
   listenForMsg(){
     events.receiveBroadcastStream().listen((data) {
       if(data != ""){
@@ -198,7 +204,23 @@ class _MyAppState extends State<MyApp>{
 
 }
 
+void initDynamicLinks() async{
+  print("initDynamic links called!!!");
+  final PendingDynamicLinkData? dynamicLink =
+  await FirebaseDynamicLinks.instance.getInitialLink();
+  final Uri? deeplink = dynamicLink?.link;
+  logger.i('Deeplinks uri:$deeplink');
+  if (deeplink != null) {
+    logger.i('Deeplinks uri:${deeplink}');
+    Get.toNamed(deeplink.queryParameters.values.first);
 
+  }
+  else{
+    if (kDebugMode) {
+      print("Page not available!!!");
+    }
+  }
+}
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
 
@@ -212,6 +234,8 @@ class _FirstPage extends State<FirstPage> {
     // TODO: implement initState
     super.initState();
 checklogin();
+
+    // initDynamicLinks();
   }
 
   void checklogin() async {
@@ -248,7 +272,11 @@ class HomePage extends StatefulWidget{
 }
 
 class _HomePage extends State<HomePage> {
-
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initDynamicLinks();
+  }
   _launchURLBrowser() async {
     var url = Uri.parse("http://www.olacabs.com/info/faqs#termsAndConditions");
     if (await canLaunchUrl(url)) {
@@ -260,7 +288,15 @@ class _HomePage extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
-    return SafeArea(
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      routes:{
+        '/phonefield' :(BuildContext contxt)=> MyPhone(),
+        '/Scrollpage' :(BuildContext contxt)=> SearchPage()
+      },
+
+    home:SafeArea(
+
       child: Scaffold(
         body: Stack(
           children: [
@@ -411,7 +447,7 @@ class _HomePage extends State<HomePage> {
         ),
       ),
 
-      );
+      ),);
 
   }
 }

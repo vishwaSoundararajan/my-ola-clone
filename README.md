@@ -20,7 +20,7 @@ samples, guidance on mobile development, and a full API reference.
 
 MyApp()--main.dart
 FirstPage()--main.dart
-MYPhone()--phonefield.dart
+Myphone()--phonefield.dart
 MainPage()---welcomepage.dart
 SearchPage()--scrollpage.dart
 SearchHome()--listingpage.dart
